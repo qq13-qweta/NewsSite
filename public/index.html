@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1720" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Aircon">
+  <title>Aircon</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Aircon</h1>
+      <p id="status" class="status">Connecting…</p>
+    </div>
+    <button id="settingsBtn" class="icon-btn" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </header>
+
+  <main id="systems" aria-live="polite"></main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <dialog id="settings">
+    <form id="settingsForm" method="dialog">
+      <h2>Connection</h2>
+      <fieldset class="seg" id="modePick">
+        <label><input type="radio" name="mode" value="local"><span>Local</span></label>
+        <label><input type="radio" name="mode" value="cloud"><span>Cloud</span></label>
+        <label><input type="radio" name="mode" value="demo"><span>Demo</span></label>
+      </fieldset>
+
+      <div data-for="local">
+        <p class="hint">Talks straight to your Airzone Webserver on home Wi-Fi. Fastest, works without internet, no account.</p>
+        <label class="field">Webserver IP address
+          <input name="host" inputmode="decimal" placeholder="192.168.1.50" autocomplete="off">
+        </label>
+        <label class="field">Port
+          <input name="port" inputmode="numeric" placeholder="3000">
+        </label>
+        <button type="button" id="discoverBtn" class="btn ghost">Find it on my network</button>
+        <ul id="found" class="found"></ul>
+      </div>
+
+      <div data-for="cloud">
+        <p class="hint">Uses your normal Airzone Cloud login (the free account, no Cloud Plan needed). Works from anywhere.</p>
+        <label class="field">Email
+          <input name="email" type="email" autocomplete="username">
+        </label>
+        <label class="field">Password
+          <input name="password" type="password" autocomplete="current-password" placeholder="">
+        </label>
+      </div>
+
+      <div data-for="demo">
+        <p class="hint">Fake zones to play with. Nothing is sent to your aircon.</p>
+      </div>
+
+      <p id="settingsError" class="error" hidden></p>
+
+      <div class="actions">
+        <button type="button" id="cancelBtn" class="btn ghost">Cancel</button>
+        <button type="submit" id="saveBtn" class="btn primary">Save &amp; connect</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="zoneTpl">
+    <article class="zone">
+      <div class="zone-head">
+        <h3 class="zone-name"></h3>
+        <button class="power" aria-label="Power">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>
+        </button>
+      </div>
+      <div class="reading">
+        <span class="temp"></span>
+        <span class="hum"></span>
+      </div>
+      <div class="target">
+        <button class="step minus" aria-label="Lower target">−</button>
+        <div class="sp"><small>Target</small><span class="sp-val"></span></div>
+        <button class="step plus" aria-label="Raise target">+</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
